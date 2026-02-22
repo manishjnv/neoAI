@@ -22,6 +22,21 @@ import { sessions } from './routes/sessions';
 
 const app = new Hono<HonoEnv>();
 
+// ── Hono-level error fallback ──
+app.onError((err, c) => {
+  console.error('[onError fallback]', err?.message ?? err);
+  const status = (err as any)?.statusCode ?? 500;
+  return c.json(
+    {
+      error: {
+        code: status === 401 ? 'UNAUTHORIZED' : 'INTERNAL_ERROR',
+        message: err?.message ?? 'Unknown error',
+      },
+    },
+    status as any,
+  );
+});
+
 // ── Global middleware ──
 app.use('*', cors({
   origin: '*', // CF Access handles origin enforcement
