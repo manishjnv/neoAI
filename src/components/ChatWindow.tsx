@@ -70,7 +70,7 @@ export function ChatWindow({
       {/* Messages area */}
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-6">
         {messages.length === 0 ? (
-          <EmptyState />
+          <EmptyState onSuggestionClick={onSend} />
         ) : (
           <div className="max-w-3xl mx-auto space-y-6">
             {messages.map((msg) => (
@@ -122,7 +122,14 @@ export function ChatWindow({
   );
 }
 
-function EmptyState() {
+const SUGGESTIONS = [
+  'Explain quantum computing',
+  'Write a Python script',
+  'Help me debug my code',
+  'Summarize this article',
+];
+
+function EmptyState({ onSuggestionClick }: { onSuggestionClick: (message: string) => void }) {
   return (
     <div className="flex flex-col items-center justify-center h-full min-h-[400px] text-center px-4">
       <div className="w-20 h-20 mb-6 rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center shadow-lg shadow-brand-500/25">
@@ -136,10 +143,11 @@ function EmptyState() {
         Chat with the latest free AI models. Select a model above and start typing to begin a conversation.
       </p>
       <div className="flex flex-wrap gap-2 mt-6 justify-center">
-        {['Explain quantum computing', 'Write a Python script', 'Help me debug my code', 'Summarize this article'].map((prompt) => (
+        {SUGGESTIONS.map((prompt) => (
           <button
             key={prompt}
-            className="px-3 py-2 bg-gray-800/50 hover:bg-gray-800 border border-gray-700/50 rounded-lg text-sm text-gray-400 hover:text-gray-200 transition-colors"
+            onClick={() => onSuggestionClick(prompt)}
+            className="px-3 py-2 bg-gray-800/50 hover:bg-gray-800 border border-gray-700/50 hover:border-brand-500/50 rounded-lg text-sm text-gray-400 hover:text-gray-200 transition-all cursor-pointer active:scale-95"
           >
             {prompt}
           </button>
