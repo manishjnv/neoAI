@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS sessions (
   id         TEXT PRIMARY KEY,
   user_id    TEXT NOT NULL,
   title      TEXT NOT NULL DEFAULT 'New Chat',
-  model      TEXT NOT NULL DEFAULT 'gemini-2.0-flash',
+  model      TEXT NOT NULL DEFAULT 'gemini-2.5-flash',
   created_at TEXT NOT NULL DEFAULT (datetime('now')),
   updated_at TEXT NOT NULL DEFAULT (datetime('now'))
 );

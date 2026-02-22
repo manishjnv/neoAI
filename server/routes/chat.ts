@@ -55,7 +55,10 @@ chat.post('/', async (c) => {
     c.executionCtx.waitUntil(db.updateSessionTitle(sessionId, title));
   }
 
-  // Save user message
+  // Get conversation history BEFORE saving user message to avoid race condition
+  const history = await db.getMessages(sessionId, 50);
+
+  // Save user message (non-blocking, after history fetch)
   c.executionCtx.waitUntil(
     db.addMessage({
       sessionId,
@@ -63,9 +66,6 @@ chat.post('/', async (c) => {
       content: body.message,
     }),
   );
-
-  // Get conversation history for context
-  const history = await db.getMessages(sessionId, 50);
 
   // Build messages array for AI
   const messages = [

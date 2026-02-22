@@ -29,18 +29,28 @@ const patterns: PiiPattern[] = [
   {
     type: 'phone',
     label: 'Phone Number',
-    regex: /(?:\+?\d{1,3}[-.\s]?)?\(?\d{2,4}\)?[-.\s]?\d{3,4}[-.\s]?\d{3,4}/g,
+    regex: /(?:\+\d{1,3}[-.]\s?)\(?\d{2,4}\)?[-.]?\d{3,4}[-.]?\d{3,4}/g,
     maskFn: (m) => m.replace(/\d(?=\d{4})/g, '*'),
   },
 
-  // ── Credit card numbers ──
+  // ── Credit card numbers (with Luhn-like length check) ──
   {
     type: 'credit_card',
     label: 'Credit Card Number',
     regex: /\b(?:\d[ \-]*?){13,19}\b/g,
     maskFn: (m) => {
       const digits = m.replace(/\D/g, '');
-      if (digits.length < 13) return m;
+      if (digits.length < 13 || digits.length > 19) return m;
+      // Basic Luhn check to avoid false positives
+      let sum = 0;
+      let alt = false;
+      for (let i = digits.length - 1; i >= 0; i--) {
+        let n = parseInt(digits[i], 10);
+        if (alt) { n *= 2; if (n > 9) n -= 9; }
+        sum += n;
+        alt = !alt;
+      }
+      if (sum % 10 !== 0) return m; // Not a valid card number, skip
       return `****-****-****-${digits.slice(-4)}`;
     },
   },
@@ -49,7 +59,7 @@ const patterns: PiiPattern[] = [
   {
     type: 'ssn',
     label: 'Social Security Number',
-    regex: /\b\d{3}[-\s]?\d{2}[-\s]?\d{4}\b/g,
+    regex: /\b(?!000|666|9\d{2})\d{3}[-\s](?!00)\d{2}[-\s](?!0000)\d{4}\b/g,
     maskFn: () => '***-**-****',
   },
 

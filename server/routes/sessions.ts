@@ -46,7 +46,7 @@ sessions.post('/', async (c) => {
 
   const session = await db.createSession(
     user.id,
-    body.model || 'gemini-2.0-flash',
+    body.model || 'gemini-2.5-flash',
     body.title || 'New Chat',
   );
 

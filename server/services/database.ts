@@ -57,18 +57,21 @@ export class DatabaseService {
   }
 
   async deleteSession(sessionId: string, userId: string): Promise<boolean> {
-    // First delete messages (cascade might not work in D1)
+    // Verify ownership before deleting anything
+    const session = await this.getSession(sessionId, userId);
+    if (!session) return false;
+
     await this.db
       .prepare('DELETE FROM messages WHERE session_id = ?')
       .bind(sessionId)
       .run();
 
-    const result = await this.db
-      .prepare('DELETE FROM sessions WHERE id = ? AND user_id = ?')
-      .bind(sessionId, userId)
+    await this.db
+      .prepare('DELETE FROM sessions WHERE id = ?')
+      .bind(sessionId)
       .run();
 
-    return result.meta.changes > 0;
+    return true;
   }
 
   // ── Messages ──

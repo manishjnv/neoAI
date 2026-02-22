@@ -23,6 +23,7 @@ export function useChat() {
 
   const [sessionId, setSessionId] = useState<string | null>(null);
   const abortRef = useRef(false);
+  const abortControllerRef = useRef<AbortController | null>(null);
   const messageCountRef = useRef(0);
 
   /** Load messages for an existing session */
@@ -59,6 +60,8 @@ export function useChat() {
   const sendMessage = useCallback(
     async (content: string, model: string) => {
       abortRef.current = false;
+      const controller = new AbortController();
+      abortControllerRef.current = controller;
       messageCountRef.current += 1;
       const userMsgId = `local_user_${messageCountRef.current}`;
       const assistantMsgId = `local_assistant_${messageCountRef.current}`;
@@ -105,6 +108,7 @@ export function useChat() {
         },
         // onDone
         (newSessionId) => {
+          if (abortRef.current) return;
           if (!sessionId && newSessionId) {
             setSessionId(newSessionId);
           }
@@ -118,6 +122,7 @@ export function useChat() {
         },
         // onError
         (error) => {
+          if (abortRef.current) return;
           setState((s) => ({
             ...s,
             isStreaming: false,
@@ -129,6 +134,7 @@ export function useChat() {
             ),
           }));
         },
+        controller.signal,
       );
     },
     [sessionId],
@@ -137,6 +143,8 @@ export function useChat() {
   /** Stop streaming */
   const stopStreaming = useCallback(() => {
     abortRef.current = true;
+    abortControllerRef.current?.abort();
+    abortControllerRef.current = null;
     setState((s) => ({
       ...s,
       isStreaming: false,

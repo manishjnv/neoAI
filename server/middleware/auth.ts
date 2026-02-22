@@ -112,19 +112,17 @@ async function verifyAccessJwt(
   const header = JSON.parse(headerJson) as { kid: string; alg: string };
 
   // Get public keys
-  const keys = await getPublicKeys(teamDomain);
-  const publicKey = keys.get(header.kid);
-  if (!publicKey) {
+  let keys = await getPublicKeys(teamDomain);
+  let key = keys.get(header.kid);
+  if (!key) {
     // Force refresh keys and retry
     cachedKeys = null;
-    const refreshedKeys = await getPublicKeys(teamDomain);
-    const retryKey = refreshedKeys.get(header.kid);
-    if (!retryKey) {
+    keys = await getPublicKeys(teamDomain);
+    key = keys.get(header.kid);
+    if (!key) {
       throw Errors.unauthorized('Unknown signing key');
     }
   }
-
-  const key = keys.get(header.kid)!;
 
   // Verify signature
   const data = new TextEncoder().encode(`${headerB64}.${payloadB64}`);

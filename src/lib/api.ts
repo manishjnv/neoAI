@@ -109,12 +109,14 @@ export const api = {
     onChunk: (text: string) => void,
     onDone: (sessionId: string) => void,
     onError: (error: ApiClientError) => void,
+    signal?: AbortSignal,
   ): Promise<void> {
     try {
       const res = await fetch(`${BASE}/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(params),
+        signal,
       });
 
       if (!res.ok) {
