@@ -21,7 +21,7 @@ export class GeminiProvider implements AIProvider {
   listModels(): ModelInfo[] {
     return [
       {
-        id: 'gemini-2.5-flash-preview-04-17',
+        id: 'gemini-2.5-flash',
         name: 'Gemini 2.5 Flash',
         provider: this.id,
         description: 'Latest Gemini 2.5 Flash — fast thinking model with hybrid reasoning.',
