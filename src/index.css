@@ -1,0 +1,121 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ═══════════════════════════════════════════════════
+   neoAI — Global Styles
+   ═══════════════════════════════════════════════════ */
+
+@layer base {
+  /* Import Inter & JetBrains Mono from Google Fonts CDN */
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(107, 114, 128, 0.3);
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(107, 114, 128, 0.5);
+  }
+
+  /* Firefox scrollbar */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(107, 114, 128, 0.3) transparent;
+  }
+}
+
+@layer components {
+  /* Code blocks in messages */
+  .prose-invert pre {
+    @apply bg-gray-900 border border-gray-700 rounded-lg p-3 overflow-x-auto text-sm my-2;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  }
+
+  .prose-invert code {
+    @apply bg-gray-800 text-brand-300 px-1.5 py-0.5 rounded text-sm;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  }
+
+  .prose-invert pre code {
+    @apply bg-transparent p-0 text-gray-200;
+  }
+
+  /* Lists in messages */
+  .prose-invert ul {
+    @apply list-disc list-inside space-y-1 my-2;
+  }
+
+  .prose-invert ol {
+    @apply list-decimal list-inside space-y-1 my-2;
+  }
+
+  /* Headings in messages */
+  .prose-invert h1,
+  .prose-invert h2,
+  .prose-invert h3 {
+    @apply font-semibold mt-3 mb-1;
+  }
+
+  .prose-invert h1 { @apply text-lg; }
+  .prose-invert h2 { @apply text-base; }
+  .prose-invert h3 { @apply text-sm; }
+
+  /* Links */
+  .prose-invert a {
+    @apply text-brand-400 hover:text-brand-300 underline;
+  }
+
+  /* Blockquotes */
+  .prose-invert blockquote {
+    @apply border-l-2 border-gray-600 pl-3 italic text-gray-400 my-2;
+  }
+
+  /* Tables */
+  .prose-invert table {
+    @apply w-full border-collapse my-2;
+  }
+
+  .prose-invert th,
+  .prose-invert td {
+    @apply border border-gray-700 px-3 py-1.5 text-sm;
+  }
+
+  .prose-invert th {
+    @apply bg-gray-800 font-semibold;
+  }
+}
+
+@layer utilities {
+  .bg-gray-750 {
+    background-color: rgb(42, 44, 56);
+  }
+
+  .line-clamp-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  }
+}

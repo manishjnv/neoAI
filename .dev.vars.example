@@ -1,0 +1,10 @@
+# ═══════════════════════════════════════════════════
+# Wrangler development secrets
+# Copy to .dev.vars for local development
+# ═══════════════════════════════════════════════════
+
+CF_ACCESS_TEAM_DOMAIN=your-team-name
+CF_ACCESS_AUD=your-access-application-aud-tag
+GEMINI_API_KEY=your-gemini-api-key
+GROQ_API_KEY=your-groq-api-key
+HF_API_KEY=your-huggingface-api-key

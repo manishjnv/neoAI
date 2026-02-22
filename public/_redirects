@@ -1,0 +1,4 @@
+# neoAI.trendsmap.in — Cloudflare Pages redirects
+
+# SPA fallback: all non-API, non-asset routes go to index.html
+# (Cloudflare Pages does this automatically, but explicit is safer)
