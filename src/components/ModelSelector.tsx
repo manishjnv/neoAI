@@ -65,7 +65,7 @@ export function ModelSelector({ models, selectedModel, onSelect, disabled }: Pro
       </button>
 
       {open && (
-        <div className="absolute bottom-full left-0 mb-2 w-80 max-h-96 overflow-y-auto bg-gray-900 border border-gray-700 rounded-xl shadow-2xl z-50 animate-fade-in">
+        <div className="absolute top-full right-0 mt-2 w-80 max-h-96 overflow-y-auto bg-gray-900 border border-gray-700 rounded-xl shadow-2xl z-50 animate-fade-in">
           {Object.entries(grouped).map(([provider, providerModels]) => (
             <div key={provider}>
               <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider bg-gray-900/80 sticky top-0">

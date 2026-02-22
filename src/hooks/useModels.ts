@@ -2,7 +2,7 @@
 // neoAI — useModels Hook
 // ═══════════════════════════════════════════════════
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import type { ModelInfo } from '../types';
 import { api } from '../lib/api';
 
@@ -19,9 +19,11 @@ export function useModels() {
     error: null,
   });
 
-  const [selectedModel, setSelectedModel] = useState<string>(() => {
-    return localStorage.getItem('neoai:model') || '';
-  });
+  const [selectedModel, setSelectedModel] = useState<string>(
+    () => localStorage.getItem('neoai:model') || '',
+  );
+
+  const fetchedRef = useRef(false);
 
   const fetchModels = useCallback(async () => {
     try {
@@ -29,12 +31,14 @@ export function useModels() {
       const { models } = await api.models();
       setState({ models, loading: false, error: null });
 
-      // Set default model if none selected
-      if (!selectedModel && models.length > 0) {
-        const defaultModel = models[0].id;
-        setSelectedModel(defaultModel);
-        localStorage.setItem('neoai:model', defaultModel);
-      }
+      // Validate saved model still exists, otherwise pick first available
+      setSelectedModel((prev) => {
+        const isValid = prev && models.some((m) => m.id === prev);
+        if (isValid) return prev;
+        const defaultModel = models.length > 0 ? models[0].id : '';
+        if (defaultModel) localStorage.setItem('neoai:model', defaultModel);
+        return defaultModel;
+      });
     } catch (err) {
       setState({
         models: [],
@@ -42,10 +46,13 @@ export function useModels() {
         error: err instanceof Error ? err.message : 'Failed to load models',
       });
     }
-  }, [selectedModel]);
+  }, []);
 
   useEffect(() => {
-    fetchModels();
+    if (!fetchedRef.current) {
+      fetchedRef.current = true;
+      fetchModels();
+    }
   }, [fetchModels]);
 
   const selectModel = useCallback((modelId: string) => {
