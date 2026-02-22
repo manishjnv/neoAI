@@ -13,8 +13,7 @@
     "db:create": "wrangler d1 create neoai-db",
     "db:migrate": "wrangler d1 execute neoai-db --file=./db/schema.sql",
     "db:migrate:local": "wrangler d1 execute neoai-db --local --file=./db/schema.sql",
-    "typecheck": "tsc --noEmit",
-    "lint": "tsc --noEmit"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "hono": "^4.6.0",

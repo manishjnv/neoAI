@@ -16,11 +16,7 @@
     "noFallthroughCasesInSwitch": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "types": ["@cloudflare/workers-types"],
-    "paths": {
-      "@server/*": ["./server/*"],
-      "@/*": ["./src/*"]
-    }
+    "types": ["@cloudflare/workers-types"]
   },
   "include": ["src", "server", "functions", "vite-env.d.ts"],
   "exclude": ["node_modules", "dist"]

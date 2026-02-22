@@ -46,11 +46,6 @@ export class AIRegistry {
     return models;
   }
 
-  /** Get a specific provider */
-  getProvider(providerId: string): AIProvider | undefined {
-    return this.providers.get(providerId);
-  }
-
   /** Get the provider for a specific model */
   getProviderForModel(modelId: string): AIProvider | undefined {
     const providerId = this.modelToProvider.get(modelId);
@@ -75,8 +70,4 @@ export class AIRegistry {
     }
   }
 
-  /** Check if any providers are available */
-  hasProviders(): boolean {
-    return this.providers.size > 0;
-  }
 }

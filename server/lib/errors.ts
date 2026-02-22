@@ -36,10 +36,6 @@ export const Errors = {
     return new AppError({ code: 'UNAUTHORIZED', message, statusCode: 401 });
   },
 
-  forbidden(message = 'Access denied') {
-    return new AppError({ code: 'FORBIDDEN', message, statusCode: 403 });
-  },
-
   notFound(resource = 'Resource') {
     return new AppError({
       code: 'NOT_FOUND',
@@ -86,22 +82,4 @@ export const Errors = {
     });
   },
 
-  providerUnavailable(provider: string) {
-    return new AppError({
-      code: 'AI_PROVIDER_UNAVAILABLE',
-      message: `AI provider "${provider}" is not configured or unavailable.`,
-      statusCode: 503,
-      retryable: true,
-    });
-  },
-
-  internal(message = 'Internal server error', cause?: Error) {
-    return new AppError({
-      code: 'INTERNAL_ERROR',
-      message,
-      statusCode: 500,
-      retryable: true,
-      cause,
-    });
-  },
 } as const;

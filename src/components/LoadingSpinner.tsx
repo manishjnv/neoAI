@@ -2,7 +2,7 @@
 // neoAI — Loading Spinner
 // ═══════════════════════════════════════════════════
 
-export function LoadingSpinner({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) {
+function LoadingSpinner({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) {
   const sizeClasses = {
     sm: 'w-4 h-4',
     md: 'w-6 h-6',

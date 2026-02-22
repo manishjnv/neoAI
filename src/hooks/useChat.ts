@@ -4,7 +4,7 @@
 
 import { useState, useCallback, useRef } from 'react';
 import type { Message } from '../types';
-import { api, ApiClientError } from '../lib/api';
+import { api } from '../lib/api';
 
 interface ChatState {
   messages: Message[];

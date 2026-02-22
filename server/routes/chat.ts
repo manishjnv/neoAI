@@ -127,7 +127,7 @@ chat.post('/', async (c) => {
           await c.env.DB.prepare(
             'INSERT INTO usage_log (id, user_hash, model, tokens_out, created_at) VALUES (?, ?, ?, ?, datetime(\'now\'))'
           )
-            .bind(generateId('use'), userHash, modelUsed, fullResponse.length, )
+            .bind(generateId('use'), userHash, modelUsed, fullResponse.length)
             .run();
         }
       } catch (err) {

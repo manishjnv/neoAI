@@ -37,12 +37,6 @@ export interface ModelInfo {
   maxOutputTokens?: number;
 }
 
-export interface ChatRequest {
-  message: string;
-  model: string;
-  sessionId?: string;
-}
-
 export interface ApiError {
   code: string;
   message: string;

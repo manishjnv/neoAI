@@ -178,11 +178,6 @@ export const api = {
     }
   },
 
-  /** Health check */
-  async health(): Promise<{ status: string }> {
-    const res = await fetch(`${BASE}/health`);
-    return handleResponse(res);
-  },
 };
 
 export { ApiClientError };
