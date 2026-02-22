@@ -7,7 +7,7 @@ pages_build_output_dir = "dist"
 
 # ── Environment variables (non-secret) ──
 [vars]
-ENVIRONMENT = "production"
+ENVIRONMENT = "development"
 RATE_LIMIT_PER_HOUR = "50"
 RATE_LIMIT_PER_DAY = "500"
 
@@ -15,12 +15,12 @@ RATE_LIMIT_PER_DAY = "500"
 [[d1_databases]]
 binding = "DB"
 database_name = "neoai-db"
-database_id = "" # Set after running: npx wrangler d1 create neoai-db
+database_id = "d9107e34-c709-409d-b409-334a2d59c779"
 
 # ── KV Namespace ──
 [[kv_namespaces]]
 binding = "KV"
-id = "" # Set after running: npx wrangler kv namespace create KV
+id = "5f2ee7885cc942fea226b319d2834ac2"
 
 # ── Workers AI ──
 [ai]

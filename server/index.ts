@@ -36,6 +36,7 @@ app.use('*', requestLoggerMiddleware);
 
 // ── Public routes (no auth required) ──
 app.route('/api/health', health);
+app.route('/api/models', models);
 
 // ── Protected routes (auth required) ──
 app.use('/api/*', authMiddleware);
@@ -47,7 +48,6 @@ app.use('/api/chat', rateLimiterMiddleware);
 app.use('/api/chat', piiGuardMiddleware);
 
 // ── API routes ──
-app.route('/api/models', models);
 app.route('/api/chat', chat);
 app.route('/api/sessions', sessions);
 
