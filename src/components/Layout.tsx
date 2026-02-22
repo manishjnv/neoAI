@@ -77,15 +77,15 @@ export function Layout() {
   );
 
   const handleLogin = useCallback(() => {
-    // Redirect to Cloudflare Access login which uses Google SSO
-    // The CF Access team domain handles the IdP redirect
-    const teamDomain = (window as any).__CF_ACCESS_TEAM_DOMAIN;
-    if (teamDomain) {
-      window.location.href = `https://${teamDomain}.cloudflareaccess.com/cdn-cgi/access/login/${window.location.hostname}?redirect_url=${encodeURIComponent(window.location.href)}`;
-    } else {
-      // In dev mode, just reload to trigger the dev-user bypass
-      window.location.reload();
-    }
+    // Cloudflare Access intercepts requests to protected domains.
+    // Simply reloading the page triggers the CF Access login flow
+    // which redirects to the Google IdP and back.
+    window.location.reload();
+  }, []);
+
+  const handleLogout = useCallback(() => {
+    // CF Access logout endpoint clears the access cookie
+    window.location.href = '/cdn-cgi/access/logout';
   }, []);
 
   // Refresh sessions when a chat completes (new session created)
@@ -131,6 +131,7 @@ export function Layout() {
         width={sidebarWidth}
         onWidthChange={handleWidthChange}
         onLogin={handleLogin}
+        onLogout={handleLogout}
       />
 
       <main className="flex-1 flex flex-col min-w-0">

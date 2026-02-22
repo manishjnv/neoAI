@@ -1,9 +1,11 @@
 # neoAI — Free-Tier AI Chat Platform
 
-> **Production URL:** `neoAI.trendsmap.in`
-> **Monthly Cost Target:** $0.00
+> **Production URL:** [`neoai.trendsmap.in`](https://neoai.trendsmap.in)  
+> **Monthly Cost Target:** $0.00  
+> **Authentication:** Google SSO via Cloudflare Zero Trust  
+> **AI Models:** 11 models across 3 providers (Gemini, Groq, Workers AI)
 
-A production-ready AI chat platform running entirely on free-tier cloud infrastructure with Cloudflare Zero Trust authentication, multiple AI model providers, and automated deployment.
+A production-ready AI chat platform running entirely on free-tier cloud infrastructure with Google SSO authentication, multi-provider AI model access, resizable sidebar, and streaming responses.
 
 ---
 
@@ -53,7 +55,8 @@ A production-ready AI chat platform running entirely on free-tier cloud infrastr
 | **Database** | Cloudflare D1 (SQLite at edge) | Serverless, zero idle, auto-replicated | 5M reads/day, 100K writes/day, 5GB |
 | **Cache/KV** | Cloudflare KV | Global low-latency key-value | 100K reads/day, 1K writes/day |
 | **AI (Primary)** | Google Gemini API | Best free tier: 15 RPM, 1M tokens/day | 1,500 requests/day |
-| **AI (Secondary)** | Groq | Blazing fast inference, generous free tier | Rate-limited free access |
+| **AI (Primary)** | Gemini 2.5 Flash | Latest hybrid reasoning model with thinking | Free tier: 5 RPM |
+| **AI (Secondary)** | Groq (incl. DeepSeek R1 70B) | Blazing fast inference, generous free tier | Rate-limited free access |
 | **AI (Edge)** | Cloudflare Workers AI | Zero-latency edge inference, no API key needed | 10,000 neurons/day |
 | **AI (Fallback)** | HuggingFace Inference | Wide model selection | Rate-limited free access |
 | **Auth** | Cloudflare Zero Trust + Google SSO | Zero-cost enterprise auth, no user DB needed | 50 users free |
@@ -90,6 +93,7 @@ neoAI/
 ├── db/
 │   └── schema.sql              # D1 database schema
 ├── functions/
+│   ├── _middleware.ts          # Pages-level middleware (pages.dev → custom domain redirect)
 │   └── api/
 │       └── [[route]].ts        # Pages Functions catch-all → Hono
 ├── public/
@@ -288,10 +292,15 @@ The pipeline runs automatically on push to `main`:
 
 ### Authentication Flow
 ```
-User → Cloudflare Edge → Zero Trust Check
-  ├─ No valid session → Redirect to Google SSO
-  ├─ Google SSO success → CF Access JWT issued
-  └─ JWT in CF-Access-JWT-Assertion header → Verified by server middleware
+User → neoai.trendsmap.in → Cloudflare Edge → Zero Trust Check
+  ├─ No valid session → 302 redirect to guest678.cloudflareaccess.com
+  │   └─ Google SSO login → CF Access JWT cookie set → redirect back
+  ├─ Valid session → CF-Access-JWT-Assertion header injected
+  │   └─ Server middleware verifies JWT via JWKS → user identity extracted
+  └─ Sign out → /cdn-cgi/access/logout → clears access cookie
+
+User → neoai.pages.dev → 301 redirect to neoai.trendsmap.in
+  └─ All *.pages.dev traffic redirected via Pages middleware
 ```
 
 ### Security Layers
@@ -436,14 +445,15 @@ Create `.vscode/extensions.json`:
 | Endpoint | Method | Auth | Description |
 |----------|--------|------|-------------|
 | `/api/health` | GET | No | System health check |
-| `/api/me` | GET | Yes | Current user info |
-| `/api/models` | GET | Yes | List available AI models |
+| `/api/models` | GET | No | List available AI models |
+| `/api/me` | GET | Yes | Current user info (from CF Access JWT) |
 | `/api/chat` | POST | Yes | Send message (streaming response) |
 | `/api/sessions` | GET | Yes | List user's sessions |
 | `/api/sessions/:id` | GET | Yes | Get session + messages |
 | `/api/sessions` | POST | Yes | Create new session |
 | `/api/sessions/:id` | PATCH | Yes | Rename session |
 | `/api/sessions/:id` | DELETE | Yes | Delete session |
+| `/cdn-cgi/access/logout` | GET | — | Sign out (CF Access) |
 
 ### Chat Request
 
@@ -451,12 +461,30 @@ Create `.vscode/extensions.json`:
 POST /api/chat
 {
   "message": "Hello, explain quantum computing",
-  "model": "gemini-2.0-flash",
-  "sessionId": "ses_xxx" // optional, creates new if omitted
+  "model": "gemini-2.5-flash-preview-04-17",
+  "sessionId": "ses_xxx"
 }
 ```
 
 Response: streaming `text/plain` with `X-Session-Id` header.
+
+### Available AI Models
+
+| Provider | Model | Context | Notes |
+|----------|-------|---------|-------|
+| **Gemini** | Gemini 2.5 Flash | 1M tokens | Hybrid reasoning with thinking, 65K output |
+| **Gemini** | Gemini 2.0 Flash | 1M tokens | Fast everyday tasks, 15 RPM free |
+| **Gemini** | Gemini 2.0 Flash Lite | 1M tokens | Lightweight speed, 30 RPM free |
+| **Groq** | Llama 3.3 70B | 128K tokens | Meta’s best open model on Groq |
+| **Groq** | Llama 3.1 8B | 128K tokens | Fast lightweight inference |
+| **Groq** | Mixtral 8x7B | 32K tokens | Mistral MoE model |
+| **Groq** | Gemma 2 9B | 8K tokens | Google Gemma 2 instruction-tuned |
+| **Groq** | DeepSeek R1 70B | 131K tokens | Advanced reasoning model |
+| **Workers AI** | Llama 3.1 8B | 4K tokens | Cloudflare edge inference |
+| **Workers AI** | Llama 3.3 70B | 4K tokens | Large model at the edge |
+| **Workers AI** | DeepSeek R1 32B | 4K tokens | Reasoning model at the edge |
+
+All models are **free tier** — no API costs.
 
 ---
 

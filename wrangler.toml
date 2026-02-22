@@ -7,7 +7,7 @@ pages_build_output_dir = "dist"
 
 # ── Environment variables (non-secret) ──
 [vars]
-ENVIRONMENT = "development"
+ENVIRONMENT = "production"
 RATE_LIMIT_PER_HOUR = "50"
 RATE_LIMIT_PER_DAY = "500"
 

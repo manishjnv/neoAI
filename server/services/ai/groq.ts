@@ -56,6 +56,15 @@ export class GroqProvider implements AIProvider {
         maxOutputTokens: 4096,
         isFree: true,
       },
+      {
+        id: 'deepseek-r1-distill-llama-70b',
+        name: 'DeepSeek R1 70B',
+        provider: this.id,
+        description: 'DeepSeek R1 Distill Llama 70B — advanced reasoning on Groq.',
+        contextWindow: 131072,
+        maxOutputTokens: 16384,
+        isFree: true,
+      },
     ];
   }
 

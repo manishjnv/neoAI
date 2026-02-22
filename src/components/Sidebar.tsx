@@ -25,6 +25,7 @@ interface Props {
   width: number;
   onWidthChange: (width: number) => void;
   onLogin?: () => void;
+  onLogout?: () => void;
 }
 
 export function Sidebar({
@@ -41,6 +42,7 @@ export function Sidebar({
   width,
   onWidthChange,
   onLogin,
+  onLogout,
 }: Props) {
   const isResizing = useRef(false);
 
@@ -210,6 +212,17 @@ export function Sidebar({
                 <p className="text-sm text-gray-200 font-medium truncate">{user.name}</p>
                 <p className="text-xs text-gray-500 truncate">{user.email}</p>
               </div>
+              {onLogout && (
+                <button
+                  onClick={onLogout}
+                  className="flex-shrink-0 p-1.5 text-gray-500 hover:text-red-400 rounded-lg hover:bg-gray-800 transition-colors"
+                  title="Sign out"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                  </svg>
+                </button>
+              )}
             </div>
           ) : onLogin ? (
             <button

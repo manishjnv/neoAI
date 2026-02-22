@@ -21,6 +21,15 @@ export class GeminiProvider implements AIProvider {
   listModels(): ModelInfo[] {
     return [
       {
+        id: 'gemini-2.5-flash-preview-04-17',
+        name: 'Gemini 2.5 Flash',
+        provider: this.id,
+        description: 'Latest Gemini 2.5 Flash — fast thinking model with hybrid reasoning.',
+        contextWindow: 1048576,
+        maxOutputTokens: 65536,
+        isFree: true,
+      },
+      {
         id: 'gemini-2.0-flash',
         name: 'Gemini 2.0 Flash',
         provider: this.id,
@@ -34,15 +43,6 @@ export class GeminiProvider implements AIProvider {
         name: 'Gemini 2.0 Flash Lite',
         provider: this.id,
         description: 'Lightweight model optimized for speed. 30 RPM free.',
-        contextWindow: 1048576,
-        maxOutputTokens: 8192,
-        isFree: true,
-      },
-      {
-        id: 'gemini-1.5-flash',
-        name: 'Gemini 1.5 Flash',
-        provider: this.id,
-        description: 'Previous-gen fast model. 15 RPM free.',
         contextWindow: 1048576,
         maxOutputTokens: 8192,
         isFree: true,
